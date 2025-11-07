@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 interface Player {
-  username: string;
+  nickname: string;
   score: number;
 }
 
@@ -48,9 +48,9 @@ export default function LeaderboardPage() {
           </thead>
           <tbody>
             {players.map((player, index) => (
-              <tr key={player.username} className="border-b hover:bg-gray-50">
+              <tr key={player.nickname} className="border-b hover:bg-gray-50">
                 <td className="py-2 px-4">{index + 1}</td>
-                <td className="py-2 px-4">{player.username}</td>
+                <td className="py-2 px-4">{player.nickname}</td>
                 <td className="py-2 px-4 font-semibold">{player.score}</td>
               </tr>
             ))}

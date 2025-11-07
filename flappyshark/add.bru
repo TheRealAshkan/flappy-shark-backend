@@ -4,13 +4,15 @@ meta {
   seq: 3
 }
 
-get {
-  url: https://flappyshark.liara.run/api/leaderboard/add?username=SGSDG&score=800
+post {
+  url: http://localhost:3000/api/leaderboard
   body: json
   auth: none
 }
 
-params:query {
-  username: SGSDG
-  score: 800
+body:json {
+  {
+    "nickname": "شسیشسبشس",
+    "score": 340
+  }
 }
