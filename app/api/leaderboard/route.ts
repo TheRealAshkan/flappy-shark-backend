@@ -13,19 +13,15 @@ export async function POST(req: Request) {
     if (!nickname || score == null)
       return Response.json({ error: 'Missing fields' }, { status: 400 })
 
-    // بررسی اینکه آیا کاربر وجود دارد یا نه
-    const { data: existingUser, error: fetchError } = await supabase
+    // بررسی رکوردهای موجود با nickname
+    const { data: existingUsers, error: fetchError } = await supabase
       .from('leaderboard')
       .select('id, score')
       .eq('nickname', nickname)
-      .single()
 
-    if (fetchError && fetchError.code !== 'PGRST116') {
-      // اگر خطا غیر از "not found" بود
-      throw fetchError
-    }
+    if (fetchError) throw fetchError
 
-    if (!existingUser) {
+    if (!existingUsers || existingUsers.length === 0) {
       // رکورد جدید
       const { error: insertError } = await supabase
         .from('leaderboard')
@@ -35,7 +31,9 @@ export async function POST(req: Request) {
 
       return Response.json({ message: 'Score added successfully' })
     } else {
-      // اگر امتیاز جدید بیشتر بود → آپدیت کن
+      // در صورت وجود چند رکورد هم فقط اولین رکورد را به‌روزرسانی می‌کنیم
+      const existingUser = existingUsers[0]
+
       if (score > existingUser.score) {
         const { error: updateError } = await supabase
           .from('leaderboard')
